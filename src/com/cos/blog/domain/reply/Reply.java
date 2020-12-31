@@ -1,4 +1,4 @@
-package com.cos.blog.domain.board;
+package com.cos.blog.domain.reply;
 
 import java.sql.Timestamp;
 
