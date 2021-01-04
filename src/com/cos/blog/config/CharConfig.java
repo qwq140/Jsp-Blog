@@ -31,7 +31,7 @@ public class CharConfig implements Filter{
 //		out.println("안녕");
 //		out.flush();
 		
-//		chain.doFilter(request, response);
+		chain.doFilter(request, response);
 	}
 	
 }
