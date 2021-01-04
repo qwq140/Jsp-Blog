@@ -34,7 +34,8 @@ public class UserService {
 	}
 	
 	// 아이디중복체크는 아이디가 중복되었는 안되었는지 두 가지 경우의 리턴
-	public int 아이디중복체크(String username) {
-		return -1;
+	public int 유저네임중복체크(String username) {
+		int result = userDao.findByUsername(username);
+		return result;
 	}
 }
