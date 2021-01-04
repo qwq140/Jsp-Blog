@@ -3,18 +3,18 @@
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
-	<form action="/action_page.php">
+	<form action="/blog/user?cmd=join" method="post">
 		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Enter username">
+			<input type="text" name="username" class="form-control" placeholder="Enter username" required/>
 		</div>
 		<div class="form-group">
-			<input type="password" class="form-control" placeholder="Enter password">
+			<input type="password" name="password" class="form-control" placeholder="Enter password" required/>
 		</div>
 		<div class="form-group">
-			<input type="email" class="form-control" placeholder="Enter email">
+			<input type="email" name="email" class="form-control" placeholder="Enter email" required/>
 		</div>
 		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Enter address">
+			<input type="text" name="address" class="form-control" placeholder="Enter address" required/>
 		</div>
 		<button type="submit" class="btn btn-primary">회원가입완료</button>
 	</form>

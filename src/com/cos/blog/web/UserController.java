@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.cos.blog.domain.user.dto.JoinReqDto;
 import com.cos.blog.domain.user.dto.LoginReqDto;
 import com.cos.blog.service.UserService;
+import com.cos.blog.util.Script;
 
 
 @WebServlet("/user")
@@ -56,7 +57,13 @@ public class UserController extends HttpServlet {
 			dto.setPassword(password);
 			dto.setEmail(email);
 			dto.setAddress(address);
-			userService.회원가입(dto);
+			System.out.println("회원가입 : "+dto);
+			int result = userService.회원가입(dto);
+			if(result == 1) {
+				response.sendRedirect("index.jsp");
+			} else {
+				//Script.back();
+			}
 		}
 	}
 

@@ -1,6 +1,7 @@
 package com.cos.blog.config;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -9,6 +10,15 @@ import javax.sql.DataSource;
 
 public class DB {
 
+	public static void close(Connection conn, PreparedStatement pstmt) {
+		try {
+			conn.close();
+			pstmt.close();
+		} catch (Exception e2) {
+			e2.printStackTrace();
+		}
+	}
+	
 	public static Connection getConnection() {
 		try {
 			Context initContext = new InitialContext();
