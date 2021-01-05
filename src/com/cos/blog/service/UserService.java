@@ -25,7 +25,7 @@ public class UserService {
 	
 	// 로그인을 하면 select를 하여 모델 User클래스에 데이터를 다 저장, 리턴은 User 타입으로
 	public User 로그인(LoginReqDto dto) {
-		return null;
+		return userDao.findByUsernameAndPassword(dto);
 	}
 	
 	// 회원수정은 insert를 하여 성공 또는 실패 두가지 경우 리턴하므로 int 타입
