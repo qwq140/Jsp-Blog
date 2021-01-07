@@ -29,8 +29,8 @@ public class BoardDao {
 		return -1;
 	}
 	
-	public List<Board> findAll(){
-		String sql = "SELECT id, userId, title, content, readCount, createDate FROM board ORDER BY id DESC";
+	public List<Board> findAll(int page){
+		String sql = "SELECT id, userId, title, content, readCount, createDate FROM board ORDER BY id DESC LIMIT ?, 4";
 		Connection conn = DB.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -38,6 +38,7 @@ public class BoardDao {
 		List<Board> boards = new ArrayList<>();
 		try {
 			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, page*4);
 			rs = pstmt.executeQuery();
 			while(rs.next()) { // 커서를 이동하는 함수
 				Board board = Board.builder()

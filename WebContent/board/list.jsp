@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="../layout/header.jsp"%>
+
 <div class="container">
 
 	<div class="m-2">
@@ -22,15 +23,47 @@
 		<div class="card col-md-12 m-2">
 			<div class="card-body">
 				<h4 class="card-title">${board.title}</h4>
-				<a href="<%=request.getContextPath() %>/board?cmd=read&id=${board.id}" class="btn btn-primary">상세보기</a>
+				<a
+					href="<%=request.getContextPath() %>/board?cmd=read&id=${board.id}"
+					class="btn btn-primary">상세보기</a>
 			</div>
 		</div>
 	</c:forEach>
 	<br />
-	<ul class="pagination justify-content-center">
-		<li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
-		<li class="page-item"><a class="page-link" href="#">Next</a></li>
-	</ul>
+	<c:choose>
+		<c:when test="${param.page == 0 && isEnd == false}" >
+			<ul class="pagination justify-content-center">
+				<li class="page-item disabled"><a class="page-link"
+					href="<%=request.getContextPath() %>/board?cmd=list&page=${param.page-1}">Previous</a></li>
+				<li class="page-item"><a class="page-link"
+					href="<%=request.getContextPath() %>/board?cmd=list&page=${param.page+1}">Next</a></li>
+			</ul>
+		</c:when>
+		<c:when test="${param.page != 0 && isEnd == false}">
+			<ul class="pagination justify-content-center">
+				<li class="page-item"><a class="page-link"
+					href="<%=request.getContextPath() %>/board?cmd=list&page=${param.page-1}">Previous</a></li>
+				<li class="page-item"><a class="page-link"
+					href="<%=request.getContextPath() %>/board?cmd=list&page=${param.page+1}">Next</a></li>
+			</ul>
+		</c:when>
+		<c:when test="${param.page == 0 && isEnd == true}">
+			<ul class="pagination justify-content-center">
+				<li class="page-item disabled"><a class="page-link"
+					href="<%=request.getContextPath() %>/board?cmd=list&page=${param.page-1}">Previous</a></li>
+				<li class="page-item disabled"><a class="page-link"
+					href="<%=request.getContextPath() %>/board?cmd=list&page=${param.page+1}">Next</a></li>
+			</ul>
+		</c:when>
+		<c:when test="${param.page != 0 && isEnd == true}">
+			<ul class="pagination justify-content-center">
+				<li class="page-item"><a class="page-link"
+					href="<%=request.getContextPath() %>/board?cmd=list&page=${param.page-1}">Previous</a></li>
+				<li class="page-item disabled"><a class="page-link"
+					href="<%=request.getContextPath() %>/board?cmd=list&page=${param.page+1}">Next</a></li>
+			</ul>
+		</c:when>
+	</c:choose>
 </div>
 
 </body>
