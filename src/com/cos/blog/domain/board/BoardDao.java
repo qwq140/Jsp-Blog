@@ -30,7 +30,7 @@ public class BoardDao {
 	}
 	
 	public List<Board> findAll(){
-		String sql = "SELECT id, userId, title, content, readCount, createDate FROM board";
+		String sql = "SELECT id, userId, title, content, readCount, createDate FROM board ORDER BY id DESC";
 		Connection conn = DB.getConnection();
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -39,7 +39,7 @@ public class BoardDao {
 		try {
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
-			while(rs.next()) {
+			while(rs.next()) { // 커서를 이동하는 함수
 				Board board = Board.builder()
 						.id(rs.getInt("id"))
 						.userId(rs.getInt("userId"))
