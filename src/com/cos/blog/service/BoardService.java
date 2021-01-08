@@ -15,7 +15,7 @@ public class BoardService {
 	}
 	
 	public int 글삭제하기(int id) {
-		return boardDao.delete(id);
+		return boardDao.deleteById(id);
 	}
 	
 	// 하나의 서비스안에 여러가지 DB관련 로직이 섞여있음

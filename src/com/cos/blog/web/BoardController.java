@@ -1,5 +1,6 @@
 package com.cos.blog.web;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -13,11 +14,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.cos.blog.domain.board.Board;
+import com.cos.blog.domain.board.dto.DeleteReqDto;
+import com.cos.blog.domain.board.dto.DeleteRespDto;
 import com.cos.blog.domain.board.dto.ReadRespDto;
 import com.cos.blog.domain.board.dto.SaveReqDto;
 import com.cos.blog.domain.user.User;
 import com.cos.blog.service.BoardService;
 import com.cos.blog.util.Script;
+import com.google.gson.Gson;
 
 
 
@@ -96,15 +100,31 @@ public class BoardController extends HttpServlet {
 			}
 			
 		} else if(cmd.equals("delete")) {
-			int id = Integer.parseInt(request.getParameter("id"));
-			int result = boardService.글삭제하기(id);
+			// 1.요청 받은 json 데이터를 자바 오브젝트로 파싱
+			BufferedReader br = request.getReader();
+			String data = br.readLine();
+			
+			Gson gson = new Gson();
+			DeleteReqDto dto = gson.fromJson(data, DeleteReqDto.class);
+			
+			System.out.println("data : "+data);
+			System.out.println("dto : " + dto);
+			
+			// 2, DB에서 id값으로 글 삭제
+			int result = boardService.글삭제하기(dto.getBoardId());
+			
+			// 3. 응답할 json 데이터를 생성
+			DeleteRespDto respDto = new DeleteRespDto();
 			if(result == 1) {
-				PrintWriter out = response.getWriter();
-				out.print("ok");
-				out.flush();
+				respDto.setStatus("ok");
 			} else {
-				Script.back(response, "삭제하는데 실패하셨습니다.");
+				respDto.setStatus("fail");
 			}
+			String respData = gson.toJson(respDto);
+			System.out.println("respData : "+respData);
+			PrintWriter out = response.getWriter();
+			out.print(respData);
+			out.flush();
 		}
 	}
 

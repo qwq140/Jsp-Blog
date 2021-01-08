@@ -12,13 +12,13 @@ import com.cos.blog.domain.board.dto.SaveReqDto;
 
 public class BoardDao {
 	
-	public int delete(int id) {
+	public int deleteById(int id) {
 		String sql = "DELETE FROM board WHERE id = ?";
 		Connection conn = DB.getConnection();
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, id);;
+			pstmt.setInt(1, id);
 			int result = pstmt.executeUpdate();
 			return result;
 		} catch (Exception e) {

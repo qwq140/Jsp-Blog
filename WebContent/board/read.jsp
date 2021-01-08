@@ -6,14 +6,33 @@
 <div class="container">
 
 	<!-- POST, GET -->
-	<c:choose>
-		<c:when test="${sessionScope.principal.id == dto.userId }">
-			<button class="btn btn-danger" onClick="deleteById(${dto.id})">삭제</button>
-		</c:when>
-		<c:otherwise>
-		</c:otherwise>
-	</c:choose>
+	<div class="container">
+	<c:if test="${sessionScope.principal.id == dto.userId}">
+		<button onClick="deleteById(${dto.id})" class="btn btn-danger">삭제</button>
+	</c:if>
 
+	<script>
+		function deleteById(boardId){
+			// 요청과 응답	을 json
+			var data = {
+				boardId: boardId
+			}
+			$.ajax({
+				type: "post",
+				url: "/blog/board?cmd=delete",
+				data: JSON.stringify(data),
+				contentType: "application/json; charset=utf-8",
+				dataType: "json"
+			}).done(function(result){
+				console.log(result);
+				if(result.status == "ok"){
+					location.href="index.jsp";
+				}else{
+					alert("삭제에 실패하였습니다.");
+				}
+			});
+		}
+	</script>
 	<br /> <br />
 	<h6 class="m-2">
 		작성자 : <i>${dto.username}</i> 조회수 : <i>${dto.readCount}</i>
@@ -71,22 +90,6 @@
 	</div>
 	<!-- 댓글 박스 끝 -->
 </div>
-<script>
-	function deleteById(id){
-		// ajax로 delete 요청 (Mehtod : POST)
-		$.ajax({
-			type: "POST",
-			url: "http://localhost:8000/blog/board?cmd=delete",
-			data: "id="+id,
-			contentType: "application/x-www-form-urlencoded",
-		}).done(function(result){
-			if(result==="ok"){
-				location.href="index.jsp";
-			} else {
-				altert("삭제에 실패하였습니다.");
-			}
-		});
-	}
-</script>
+
 </body>
 </html>
