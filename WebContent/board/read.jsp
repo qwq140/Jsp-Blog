@@ -6,15 +6,15 @@
 <div class="container">
 	<br /> <br />
 	<h6 class="m-2">
-		작성자 : <i>홍길동</i> 조회수 : <i>5</i>
+		작성자 : <i>${dto.username}</i> 조회수 : <i>${dto.readCount}</i>
 	</h6>
 	<br />
 	<h3 class="m-2">
-		<b>제목입니다</b>
+		<b>${dto.title }</b>
 	</h3>
 	<hr />
 	<div class="form-group">
-		<div class="m-2">내용입니다</div>
+		<div class="m-2">${dto.content }</div>
 	</div>
 
 	<hr />
