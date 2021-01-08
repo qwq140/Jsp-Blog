@@ -10,6 +10,26 @@ import com.cos.blog.config.DB;
 import com.cos.blog.domain.board.dto.SaveReqDto;
 
 public class BoardDao {
+	public int count() {
+		String sql = "SELECT count(*) FROM board";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				return rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally { // 무조건 실행
+			DB.close(conn, pstmt);
+		}
+		return -1;
+	}
+	
 	public int save(SaveReqDto dto) { //회원가입
 		String sql = "INSERT INTO board(userId, title, content , createDate) VALUES(?,?,?,now())";
 		Connection conn = DB.getConnection();
@@ -54,6 +74,8 @@ public class BoardDao {
 			return boards;
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally { // 무조건 실행
+			DB.close(conn, pstmt);
 		}
 		return null;
 	}
