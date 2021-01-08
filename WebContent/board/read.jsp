@@ -4,6 +4,16 @@
 <%@ include file="../layout/header.jsp"%>
 
 <div class="container">
+
+	<!-- POST, GET -->
+	<c:choose>
+		<c:when test="${sessionScope.principal.id == dto.userId }">
+			<button class="btn btn-danger" onClick="deleteById(${dto.id})">삭제</button>
+		</c:when>
+		<c:otherwise>
+		</c:otherwise>
+	</c:choose>
+
 	<br /> <br />
 	<h6 class="m-2">
 		작성자 : <i>${dto.username}</i> 조회수 : <i>${dto.readCount}</i>
@@ -61,6 +71,22 @@
 	</div>
 	<!-- 댓글 박스 끝 -->
 </div>
-
+<script>
+	function deleteById(id){
+		// ajax로 delete 요청 (Mehtod : POST)
+		$.ajax({
+			type: "POST",
+			url: "http://localhost:8000/blog/board?cmd=delete",
+			data: "id="+id,
+			contentType: "application/x-www-form-urlencoded",
+		}).done(function(result){
+			if(result==="ok"){
+				location.href="index.jsp";
+			} else {
+				altert("삭제에 실패하였습니다.");
+			}
+		});
+	}
+</script>
 </body>
 </html>

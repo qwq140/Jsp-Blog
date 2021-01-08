@@ -1,6 +1,7 @@
 package com.cos.blog.web;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -94,7 +95,17 @@ public class BoardController extends HttpServlet {
 				dis.forward(request, response);
 			}
 			
-		} 
+		} else if(cmd.equals("delete")) {
+			int id = Integer.parseInt(request.getParameter("id"));
+			int result = boardService.글삭제하기(id);
+			if(result == 1) {
+				PrintWriter out = response.getWriter();
+				out.print("ok");
+				out.flush();
+			} else {
+				Script.back(response, "삭제하는데 실패하셨습니다.");
+			}
+		}
 	}
 
 }
