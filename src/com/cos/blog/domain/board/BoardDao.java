@@ -12,19 +12,21 @@ import com.cos.blog.domain.board.dto.SaveReqDto;
 
 public class BoardDao {
 	
-	public void readCountUpdate(int id) {
+	public int  readCountUpdate(int id) {
 		String sql = "UPDATE board SET readCount = readCount+1 WHERE id = ?";
 		Connection conn = DB.getConnection();
 		PreparedStatement pstmt = null;
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, id);;
-			pstmt.executeUpdate();
+			int result = pstmt.executeUpdate();
+			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally { // 무조건 실행
 			DB.close(conn, pstmt);
 		}
+		return -1;
 	}
 	
 	public ReadRespDto findById(int id){
