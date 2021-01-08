@@ -73,16 +73,13 @@ public class BoardController extends HttpServlet {
 			List<Board> boards = boardService.목록보기(page);
 			request.setAttribute("boards", boards);
 			
-			int boardCount = boards.size();
+			List<Board> lastCheck = boardService.목록보기(page+1);
 			boolean isEnd = false;
-			if (boardCount != 4) {
+			if (lastCheck.size() == 0) {
 				isEnd = true;
-				
 			}
 			request.setAttribute("isEnd", isEnd);
-//			System.out.println(boardCount);
-//			System.out.println(page);
-//			System.out.println(isEnd);
+
 			RequestDispatcher dis = request.getRequestDispatcher("board/list.jsp");
 			dis.forward(request, response);
 		} else if (cmd.equals("read")) {
