@@ -18,7 +18,6 @@ import com.cos.blog.domain.board.Board;
 import com.cos.blog.domain.board.dto.CommonRespDto;
 import com.cos.blog.domain.board.dto.ReadRespDto;
 import com.cos.blog.domain.board.dto.SaveReqDto;
-import com.cos.blog.domain.board.dto.SearchReqDto;
 import com.cos.blog.domain.board.dto.UpdateReqDto;
 import com.cos.blog.domain.reply.dto.ReplyRespDto;
 import com.cos.blog.domain.user.User;
@@ -78,40 +77,22 @@ public class BoardController extends HttpServlet {
 				Script.back(response, "글쓰기실패");
 			}
 		} else if (cmd.equals("list")) {
-			int page = Integer.parseInt(request.getParameter("page"));
-			String keyword = request.getParameter("keyword");
+			int page = Integer.parseInt(request.getParameter("page"));  // 최초 : 0, Next : 1, Next: 2
+			List<Board> boards = boardService.목록보기(page);
+			request.setAttribute("boards", boards);
 			
-//			System.out.println("keyword : " +keyword);
-			int boardCount=0;
+			// 계산 (전체 데이터수랑 한페이지몇개 - 총 몇페이지 나와야되는 계산) 3page라면 page의 맥스값은 2
+			// page == 2가 되는 순간  isEnd = true
+			// request.setAttribute("isEnd", true);
+			int boardCount = boardService.글개수();
+			int lastPage = (boardCount-1)/4; // 2/4 = 0, 3/4 = 0, 4/4 = 1, 9/4 = 2 ( 0page, 1page, 2page) 
+			double currentPosition = (double)page/(lastPage)*100;
 			
-			if(keyword.equals("")) {
-				List<Board> boards = boardService.목록보기(page);
-				request.setAttribute("boards", boards);
-
-				// 계산 (전체 데이터수랑 한페이지몇개 - 총 몇페이지 나와야되는 계산) 3page라면 page의 맥스값은 2
-				boardCount = boardService.글개수();
-			} else {
-				SearchReqDto dto = new SearchReqDto();
-				dto.setPage(page);
-				dto.setKeyword(keyword);
-
-				List<Board> boards = boardService.목록보기(dto);
-				request.setAttribute("boards", boards);
-
-				// 계산 (전체 데이터수랑 한페이지몇개 - 총 몇페이지 나와야되는 계산) 3page라면 page의 맥스값은 2
-				boardCount = boardService.글개수(keyword);
-			}
-			
-			int lastPage = (boardCount - 1) / 4; // 2/4 = 0, 3/4 = 0, 4/4 = 1. 9/4 = 2 ( 0page, 1page, 2page )
-			double currentPosition = (double) page / lastPage * 100;
-			
-//			System.out.println("lastPage : "+lastPage);
-//			System.out.println("currentPosition : "+currentPosition);
-
 			request.setAttribute("lastPage", lastPage);
 			request.setAttribute("currentPosition", currentPosition);
 			RequestDispatcher dis = request.getRequestDispatcher("board/list.jsp");
 			dis.forward(request, response);
+			
 		} else if (cmd.equals("read")) {
 			int id = Integer.parseInt(request.getParameter("id"));
 			ReadRespDto dto = boardService.글상세보기(id); // board테이블 + user테이블 = 조인된 데이터 !!
@@ -121,8 +102,8 @@ public class BoardController extends HttpServlet {
 				request.setAttribute("dto", dto);
 				ReplyService replyService = new ReplyService();
 				List<ReplyRespDto> replies = replyService.댓글목록(id);
-				request.setAttribute("replies", replies);		
-				
+				request.setAttribute("replies", replies);
+
 				RequestDispatcher dis = request.getRequestDispatcher("board/read.jsp");
 				dis.forward(request, response);
 			}
@@ -141,7 +122,7 @@ public class BoardController extends HttpServlet {
 
 			Gson gson = new Gson();
 			String respData = gson.toJson(commonRespDto);
-			System.out.println("respData : "+respData);
+			System.out.println("respData : " + respData);
 			PrintWriter out = response.getWriter();
 			out.print(respData);
 		} else if (cmd.equals("updateForm")) {
@@ -167,16 +148,23 @@ public class BoardController extends HttpServlet {
 			} else {
 				Script.back(response, "글 수정에 실패하였습니다.");
 			}
-		} else if (cmd.equals("search")) {
-			int page = Integer.parseInt(request.getParameter("page"));
+		} else if(cmd.equals("search")) {
 			String keyword = request.getParameter("keyword");
-			
-			if(keyword.equals("")) {
-				Script.back(response, "검색어를 입력하세요");
-			} else {
-				response.sendRedirect("/blog/board?cmd=list&page=" + page +"&keyword=" +keyword);
-			}
-			
+			int page = Integer.parseInt(request.getParameter("page"));
+
+			List<Board> boards = boardService.글검색(keyword, page);
+			request.setAttribute("boards", boards);
+
+			int boardCount = boardService.글개수(keyword);
+			int lastPage = (boardCount-1)/4; // 2/4 = 0, 3/4 = 0, 4/4 = 1, 9/4 = 2 ( 0page, 1page, 2page) 
+			double currentPosition = (double)page/(lastPage)*100;
+
+
+
+			request.setAttribute("lastPage", lastPage);
+			request.setAttribute("currentPosition", currentPosition);
+			RequestDispatcher dis = request.getRequestDispatcher("board/list.jsp");
+			dis.forward(request, response);
 		}
 	}
 
