@@ -3,6 +3,7 @@ package com.cos.blog.web;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -19,8 +20,10 @@ import com.cos.blog.domain.board.dto.ReadRespDto;
 import com.cos.blog.domain.board.dto.SaveReqDto;
 import com.cos.blog.domain.board.dto.SearchReqDto;
 import com.cos.blog.domain.board.dto.UpdateReqDto;
+import com.cos.blog.domain.reply.dto.ReplyRespDto;
 import com.cos.blog.domain.user.User;
 import com.cos.blog.service.BoardService;
+import com.cos.blog.service.ReplyService;
 import com.cos.blog.util.Script;
 import com.google.gson.Gson;
 
@@ -116,6 +119,10 @@ public class BoardController extends HttpServlet {
 				Script.back(response, "상세보기를 실패하셨습니다.");
 			} else {
 				request.setAttribute("dto", dto);
+				ReplyService replyService = new ReplyService();
+				List<ReplyRespDto> replies = replyService.댓글목록(id);
+				request.setAttribute("replies", replies);		
+				
 				RequestDispatcher dis = request.getRequestDispatcher("board/read.jsp");
 				dis.forward(request, response);
 			}
