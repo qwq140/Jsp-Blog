@@ -27,4 +27,7 @@ public class ReplyService {
 		return replyDao.findAll(boardId);
 	}
 	
+	public int 댓글삭제하기(int id) {
+		return replyDao.deleteById(id);
+	}
 }

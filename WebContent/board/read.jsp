@@ -51,7 +51,7 @@
 
 								<!-- 댓글 아이템 -->
 								<c:forEach var="reply" items="${replies}">
-									<li id="reply-1" class="media">
+									<li id="reply-${reply.id }" class="media">
 										<div class="media-body">
 											<strong class="text-primary">${reply.username }</strong>
 											<p>${reply.content }</p>

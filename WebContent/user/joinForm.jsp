@@ -57,6 +57,7 @@
 				alert('유저네임이 중복되었습니다.')	
 			} else { // 유저네임 중복x
 				isChecking = true;
+				$("#username").attr("readonly", "readonly");
 				alert('해당유저네임을 사용할 수 있습니다.')
 			}
 		});

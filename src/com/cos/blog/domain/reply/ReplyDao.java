@@ -14,6 +14,23 @@ import com.cos.blog.domain.reply.dto.SaveReqDto;
 
 public class ReplyDao {
 	
+	public int deleteById(int id) {
+		String sql = "DELETE FROM reply WHERE id = ?";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, id);
+			int result = pstmt.executeUpdate();
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally { // 무조건 실행
+			DB.close(conn, pstmt);
+		}
+		return -1;
+	}
+	
 	public List<ReplyRespDto> findAll(int boardId){
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT r.id, r.userId, r.boardId, r.content, u.username ");
