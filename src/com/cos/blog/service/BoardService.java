@@ -6,6 +6,7 @@ import com.cos.blog.domain.board.Board;
 import com.cos.blog.domain.board.BoardDao;
 import com.cos.blog.domain.board.dto.ReadRespDto;
 import com.cos.blog.domain.board.dto.SaveReqDto;
+import com.cos.blog.domain.board.dto.SearchReqDto;
 import com.cos.blog.domain.board.dto.UpdateReqDto;
 
 public class BoardService {
@@ -37,6 +38,10 @@ public class BoardService {
 		return boardDao.count();
 	}
 	
+	public int 글개수(String keyword) {
+		return boardDao.countByKeyword(keyword);
+	}
+	
 	public int 글쓰기(SaveReqDto dto) {
 		return boardDao.save(dto);
 	}
@@ -45,5 +50,8 @@ public class BoardService {
 		return boardDao.findAll(page);
 	}
 	
+	public List<Board> 목록보기(SearchReqDto dto){
+		return boardDao.findByKeyword(dto);
+	}
 	
 }

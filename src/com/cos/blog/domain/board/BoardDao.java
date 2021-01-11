@@ -9,9 +9,42 @@ import java.util.List;
 import com.cos.blog.config.DB;
 import com.cos.blog.domain.board.dto.ReadRespDto;
 import com.cos.blog.domain.board.dto.SaveReqDto;
+import com.cos.blog.domain.board.dto.SearchReqDto;
 import com.cos.blog.domain.board.dto.UpdateReqDto;
 
 public class BoardDao {
+	
+	public List<Board> findByKeyword(SearchReqDto dto){
+		String sql = "SELECT id, userId, title, content, readCount, createDate FROM board WHERE title LIKE ? ORDER BY id DESC LIMIT ?, 4";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		List<Board> boards = new ArrayList<>();
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%"+dto.getKeyword()+"%");
+			pstmt.setInt(2, dto.getPage()*4);
+			rs = pstmt.executeQuery();
+			while(rs.next()) { // 커서를 이동하는 함수
+				Board board = Board.builder()
+						.id(rs.getInt("id"))
+						.userId(rs.getInt("userId"))
+						.title(rs.getString("title"))
+						.content(rs.getString("content"))
+						.readCount(rs.getInt("readCount"))
+						.createDate(rs.getTimestamp("createDate"))
+						.build();
+				boards.add(board);				
+			}
+			return boards;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally { // 무조건 실행
+			DB.close(conn, pstmt);
+		}
+		return null;
+	}
 	
 	public int update(UpdateReqDto dto) {
 		String sql = "UPDATE board SET title = ?, content = ? WHERE id = ? ";
@@ -99,6 +132,27 @@ public class BoardDao {
 			DB.close(conn, pstmt);
 		}
 		return null;
+	}
+	
+	public int countByKeyword(String keyword) {
+		String sql = "SELECT count(*) FROM board WHERE title = ?";
+		Connection conn = DB.getConnection();
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, keyword);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				return rs.getInt(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally { // 무조건 실행
+			DB.close(conn, pstmt);
+		}
+		return -1;
 	}
 	
 	public int count() {

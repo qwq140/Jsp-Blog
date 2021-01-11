@@ -6,7 +6,7 @@
 
 	<div class="m-2">
 		<form class="form-inline d-flex justify-content-end"
-			action="/blog/board">
+			action="/blog/board" method="POST">
 			<input type="hidden" name="cmd" value="search" /> <input
 				type="hidden" name="page" value="0" /> <input type="text"
 				name="keyword" class="form-control mr-sm-2" placeholder="Search">
@@ -37,7 +37,7 @@
 			</c:when>
 			<c:otherwise>
 				<li class="page-item"><a class="page-link"
-					href="<%=request.getContextPath() %>/board?cmd=list&page=${param.page-1}">Previous</a></li>
+					href="<%=request.getContextPath() %>/board?cmd=list&page=${param.page-1}&keyword=${param.keyword}">Previous</a></li>
 			</c:otherwise>
 		</c:choose>
 		<c:choose>
@@ -46,7 +46,7 @@
 			</c:when>
 			<c:otherwise>
 				<li class="page-item"><a class="page-link"
-					href="<%=request.getContextPath() %>/board?cmd=list&page=${param.page+1}">Next</a></li>
+					href="<%=request.getContextPath() %>/board?cmd=list&page=${param.page+1}&keyword=${param.keyword}">Next</a></li>
 			</c:otherwise>
 		</c:choose>
 	</ul>
